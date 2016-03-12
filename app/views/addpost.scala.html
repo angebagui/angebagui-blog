@@ -1,0 +1,72 @@
+@(user:User, postForm: Form[PostData])(implicit messages: Messages)
+
+@import helper._
+
+@dashboard(user, "Add Post"){
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Posts</h1>
+    </div>
+      <!-- /.col-lg-12 -->
+  </div>
+  <!-- /.row -->
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Create a post
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+
+              @form(action = routes.Application.storePost()){
+                <div class="form-group">
+                  @input(postForm("title"), '_label -> "Title") { (id, name, value, args) =>
+                    <input type="text" name="@name" class="form-control"  placeholder="Enter text" id="@id" @toHtmlArgs(args) autofocus>
+                  }
+                </div>
+                <div class="form-group">
+                  @input(postForm("subtitle"), '_label -> "Subtitle") { (id, name, value, args) =>
+                    <input type="text" name="@name" class="form-control"  placeholder="Enter text" id="@id" @toHtmlArgs(args)>
+                  }
+                </div>
+
+              <div class="form-group">
+                @input(postForm("cover"), '_label -> "Cover Link") { (id, name, value, args) =>
+                <input type="text" name="@name" class="form-control"  placeholder="Enter text" id="@id" @toHtmlArgs(args)>
+                }
+              </div>
+
+
+                <div class="form-group">
+                  @textarea(field = postForm("content"), args = 'id -> "mytextarea", 'class -> "form-control", '_label -> "Content")
+                </div>
+
+
+
+              <script>
+                  tinymce.init({
+                    selector: '#mytextarea'
+                  });
+                  </script>
+
+
+
+
+                <button type="submit" class="btn btn-default">Save</button>
+                <button type="reset" class="btn btn-default">Canceled</button>
+              }
+            </div>
+          </div>
+            <!-- /.row (nested) -->
+        </div>
+          <!-- /.panel-body -->
+      </div>
+        <!-- /.panel -->
+    </div>
+      <!-- /.col-lg-12 -->
+  </div>
+  <!-- /.row -->
+
+}
