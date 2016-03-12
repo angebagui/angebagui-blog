@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/myapp -Dhttp.port=${PORT} -Dplay.evolutions.db.default.autoApply=true -Dslick.dbs.default.driver="slick.driver.PostgresDriver$" -Dslick.dbs.db.default.driver=org.postgresql.Driver -Dslick.dbs.db.default.url=${DATABASE_URL}
+web: target/universal/stage/bin/angebagui -Dhttp.port=${PORT} -Dplay.evolutions.db.default.autoApply=true -Dslick.dbs.default.driver="slick.driver.PostgresDriver$" -Dslick.dbs.db.default.driver=org.postgresql.Driver -Dslick.dbs.db.default.url=${DATABASE_URL}
