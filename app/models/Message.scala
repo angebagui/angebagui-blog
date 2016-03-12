@@ -15,7 +15,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
  */
 case class Message(val id:Option[Long], val firstName: String, val lastName: String, val email: String, val phone: String, val message: String, val createdAt: Long, var updatedAt: Long)
 
-case class MessageForm(val firstName: String, val lastName: String, val email: String, val phone: String, val message: String)
+case class MessageData(val firstName: String, val lastName: String, val email: String, val phone: String, val message: String)
+
 class MessageService @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends Model[Message]{
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]

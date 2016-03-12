@@ -7,7 +7,6 @@ GET         /                       controllers.Application.index
 GET         /about                  controllers.Application.about
 GET         /contact                controllers.Application.contact
 POST        /contact/message        controllers.Application.postMessage
-
 GET         /posts/:id              controllers.Application.showPost(id: Long)
 
 GET         /login                  controllers.Application.login
@@ -17,7 +16,7 @@ GET         /logout                 controllers.Application.logout
 GET         /dashboard              controllers.Application.dindex
 GET         /posts                  controllers.Application.allPost
 GET         /messages               controllers.Application.allMessage
-
+GET         /message/delete/:id     controllers.Application.deleteMessage(id: Long)
 
 GET         /post/edit/:id          controllers.Application.editPost(id: Long)
 POST        /post/update            controllers.Application.updatePost

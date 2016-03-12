@@ -15,15 +15,7 @@ import scala.concurrent.{Future, ExecutionContext}
 @Singleton
 class Application @Inject()(userService: UserService, postService: PostService, messageService: MessageService, val messagesApi: MessagesApi) (implicit exec: ExecutionContext)extends Controller with I18nSupport {
 
-  val messageForm = Form(
-    mapping(
-      "firstName" -> text,
-      "lastName"-> text,
-      "email"->email,
-      "phone"->text,
-      "message"->text
-    )(MessageForm.apply)(MessageForm.unapply)
-  )
+
   val userLoginForm = Form(
     mapping(
       "email" -> email,
@@ -50,13 +42,29 @@ class Application @Inject()(userService: UserService, postService: PostService, 
     Ok(views.html.about())
   }
   def  contact = Action {implicit request =>
-    Ok(views.html.contact(messageForm))
+    Ok(views.html.contact())
   }
-   def postMessage = Action {implicit request =>
-     val name = request.body.asFormUrlEncoded.get("name")
-     Logger.info(" "+name);
-
-     Ok("OK")
+   def postMessage = Action.async{implicit request =>
+      request.body.asFormUrlEncoded match {
+        case Some(fields) => {
+          val firstName = fields.get("firstName").get.head
+          val lastName = fields.get("lastName").get.head
+          val email = fields.get("email").get.head
+          val phone = fields.get("phone").get.head
+          val message = fields.get("message").get.head
+          messageService.insertOrUpdate(Message(Some(0),firstName,lastName,email,phone,message,System.currentTimeMillis(),System.currentTimeMillis())).map{
+            case Some(messageId) => {
+             Ok("")
+            }
+            case None => {
+             Ok("")
+            }
+          }
+        }
+        case None => {
+         Future(NoContent)
+        }
+      }
 
    }
 
@@ -72,8 +80,14 @@ class Application @Inject()(userService: UserService, postService: PostService, 
 
   }
 
-  def login () = Action {
-    Ok(views.html.login(userLoginForm))
+  def login () = Action.async{implicit request=>
+    request.session.get("connected").map{ connected =>
+      userService.findByEmail(connected).map{ user =>
+          Redirect(routes.Application.dindex())
+      }
+    }.getOrElse{
+      Future(Ok(views.html.login(userLoginForm)))
+    }
   }
   def postLogin () = Action.async{ implicit request =>
     userLoginForm.bindFromRequest.fold(
@@ -236,6 +250,28 @@ class Application @Inject()(userService: UserService, postService: PostService, 
 
 
 
-  def allMessage = TODO
+  def allMessage = Action.async{ implicit request =>
+    request.session.get("connected").map { connected =>
+      userService.findByEmail(connected).flatMap { user =>
+         messageService.listAll.map { messages =>
+          Ok(views.html.dmessage(user, messages))
+        }
+      }
+    }.getOrElse{
+      Future(Unauthorized("Oops, you are not connected"))
+    }
+  }
+  def deleteMessage(id: Long) = Action.async{ implicit request =>
+    request.session.get("connected").map{ connected =>
+      userService.findByEmail(connected).flatMap{ user =>
+        messageService.delete(id).map{ postId =>
+          Redirect(routes.Application.allMessage()).flashing("message" -> "Message delete successfully")
+        }
+
+      }
+    }.getOrElse{
+      Future(Unauthorized("Oops, you are not connected"))
+    }
+  }
 
 }
