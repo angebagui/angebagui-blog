@@ -9,6 +9,7 @@ import org.joda.time.{DateTime, YearMonth}
   */
 object DateFormat {
 
+  def distanceContext = ""
   def futureContext(millis: Long): String = {
     val dateTime = new DateTime(millis)
     val builder = new StringBuilder
