@@ -24,5 +24,7 @@ GET         /post/delete/:id        controllers.Application.deletePost(id: Long)
 GET         /post/create            controllers.Application.createPost
 POST        /post/create            controllers.Application.storePost
 
+GET         /user/create/:name/:email/:password controllers.Application.createUser(name: String,email: String, password: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)

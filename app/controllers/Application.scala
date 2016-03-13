@@ -274,4 +274,15 @@ class Application @Inject()(userService: UserService, postService: PostService, 
     }
   }
 
+  def createUser(name: String,email: String, password: String) = Action.async{ implicit request =>
+    userService.insertOrUpdate(User(Some(0),name,email,password,System.currentTimeMillis(),System.currentTimeMillis())).map{
+      case Some(user) =>{
+        Ok("")
+      }
+      case None => {
+        Ok("")
+      }
+    }
+  }
+
 }
